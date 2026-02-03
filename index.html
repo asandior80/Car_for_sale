@@ -84,11 +84,6 @@ header p{color:#ccc}
   font-weight:bold;
   margin:8px 0;
 }
-.car p{
-  font-size:14px;
-  line-height:1.6;
-  display:none;
-}
 
 /* MODAL */
 .modal{
@@ -232,19 +227,19 @@ footer{
     <h2>Customer Reviews</h2>
     <div class="review-grid">
       <div class="review">
-        <p>“The entire process was smooth and professional. The car was exactly as described, clean, and well maintained. Communication was clear and honest from start to finish. I would definitely recommend this dealership.”</p>
+        <p>“The process was smooth. Cars were exactly as described, clean, and well maintained. Communication was clear. Highly recommended.”</p>
         <span>— Michael T.</span>
       </div>
       <div class="review">
-        <p>“Very impressed with the quality of vehicles listed. Prices were fair and reasonable. I appreciated the transparency and fast email response. Overall, a reliable place to buy a car.”</p>
+        <p>“Quality vehicles, fair prices, transparent info, and fast email response. Reliable place to buy a car.”</p>
         <span>— Sarah L.</span>
       </div>
       <div class="review">
-        <p>“I was skeptical at first, but everything turned out great. The car drives perfectly and matches the description. Professional service and no pressure at all.”</p>
+        <p>“Skeptical at first, but everything turned out great. Cars drive perfectly and match the description.”</p>
         <span>— Daniel K.</span>
       </div>
       <div class="review">
-        <p>“Excellent experience from inquiry to purchase. Honest descriptions, realistic pricing, and respectful communication. I will definitely return for my next vehicle.”</p>
+        <p>“Excellent experience. Honest descriptions, realistic pricing, and respectful communication.”</p>
         <span>— Amanda R.</span>
       </div>
     </div>
@@ -290,37 +285,46 @@ var map = L.map('map').setView([40.7128,-74.0060],5);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
   attribution:'© OpenStreetMap'
 }).addTo(map);
-L.marker([40.7128,-74.0060]).addTo(map).bindPopup("Sample Vehicle Location").openPopup();
 
-/* CAR DATA */
+/* CAR DATA - 15 Different Brands */
 const cars = [
-  {
-    name:"Urban Cruiser", price:"$3,800", type:"SUV",
-    img:"https://images.unsplash.com/photo-1503376780353-7e6692767b70",
-    desc:"Designed for smooth performance and comfort. Reliable engine with steady handling. Clean interior and exterior finish. Excellent road stability. Ideal for daily and long drives. Easy maintenance. Strong resale value."
-  },
-  {
-    name:"Silver Runner", price:"$2,500", type:"Sedan",
-    img:"https://images.unsplash.com/photo-1493238792000-8113da705763",
-    desc:"Smooth and efficient driving experience. Fuel-friendly performance. Comfortable seating. Responsive steering. Well-maintained condition. Suitable for city use. Dependable choice."
-  },
-  {
-    name:"Classic Roadster", price:"$4,000", type:"Sport",
-    img:"https://images.unsplash.com/photo-1502877338535-766e1452684a",
-    desc:"Solid build quality. Stable highway performance. Clean interior finish. Comfortable cabin. Reliable braking system. Smooth acceleration. Professional appearance."
-  },
-  // Add more cars similarly (total 10-15)
-  {
-    name:"Family Voyager", price:"$3,200", type:"Family",
-    img:"https://images.unsplash.com/photo-1608889175512-6bcbde8fa7d4",
-    desc:"Spacious interior and comfortable seating. Excellent safety ratings. Smooth handling. Fuel-efficient performance. Reliable for long trips. Easy maintenance. High resale value."
-  },
-  {
-    name:"Compact Zoom", price:"$1,200", type:"Compact",
-    img:"https://images.unsplash.com/photo-1590891743867-8f1b9b4edbb6",
-    desc:"Small and efficient city car. Easy parking. Economical fuel consumption. Responsive steering. Comfortable cabin. Durable design. Perfect for urban commuting."
-  }
+  {name:"Toyota Corolla", price:"$2,500", type:"Sedan", img:"https://images.unsplash.com/photo-1571607380965-5f5b8ec7750f", lat:40.7128, lon:-74.0060,
+  desc:"Reliable sedan for daily commuting. Comfortable interior with modern features. Fuel-efficient engine. Smooth handling. Clean and well-maintained. Excellent resale value. Ideal for city driving."},
+  {name:"Honda CR-V", price:"$3,200", type:"SUV", img:"https://images.unsplash.com/photo-1611840223032-f06e52418f0a", lat:34.0522, lon:-118.2437,
+  desc:"Spacious SUV perfect for family trips. Smooth ride and stable handling. Reliable engine. Modern safety features. Comfortable seating. Excellent road performance. Well-maintained condition."},
+  {name:"Ford Mustang", price:"$3,900", type:"Sport", img:"https://images.unsplash.com/photo-1601337013370-437da18622f3", lat:41.8781, lon:-87.6298,
+  desc:"High-performance sports car. Sleek and aerodynamic design. Powerful engine with smooth acceleration. Luxurious leather interior. Excellent handling and braking. Eye-catching appearance."},
+  {name:"Chevrolet Spark", price:"$900", type:"Compact", img:"https://images.unsplash.com/photo-1608610535721-2c2d2d2e0d88", lat:29.7604, lon:-95.3698,
+  desc:"Efficient compact car ideal for city driving. Easy parking and maneuverability. Fuel-efficient and budget-friendly. Comfortable cabin. Durable and reliable. Perfect starter vehicle."},
+  {name:"BMW X5", price:"$4,000", type:"SUV", img:"https://images.unsplash.com/photo-1585190544203-8f2f8b029b5c", lat:33.4484, lon:-112.0740,
+  desc:"Luxury SUV with premium features. Smooth driving experience. Spacious interior and cargo space. Powerful engine and stability. Comfortable and safe. Excellent handling and design."},
+  {name:"Audi A4", price:"$3,500", type:"Sedan", img:"https://images.unsplash.com/photo-1608510353305-d98602cb930b", lat:25.7617, lon:-80.1918,
+  desc:"Stylish and modern sedan. Comfortable and quiet cabin. Fuel-efficient engine. Smooth handling and reliable performance. Clean and professionally maintained. Ideal for city and highway."},
+  {name:"Mercedes GLA", price:"$3,800", type:"SUV", img:"https://images.unsplash.com/photo-1617927295391-bbb7f8c2a23c", lat:39.7392, lon:-104.9903,
+  desc:"Compact luxury SUV with sporty look. Comfortable interior with modern tech. Reliable engine and smooth handling. Fuel-efficient performance. Excellent safety features. Well-maintained vehicle."},
+  {name:"Volkswagen Golf", price:"$2,200", type:"Compact", img:"https://images.unsplash.com/photo-1590891743867-8f1b9b4edbb6", lat:32.7767, lon:-96.7970,
+  desc:"Compact hatchback ideal for city driving. Efficient engine and fuel economy. Comfortable cabin and easy handling. Reliable performance. Clean and well-maintained. Perfect for urban commute."},
+  {name:"Nissan Rogue", price:"$2,900", type:"SUV", img:"https://images.unsplash.com/photo-1601854838570-f5bbfbb2c332", lat:47.6062, lon:-122.3321,
+  desc:"Practical SUV with family-friendly design. Smooth ride and reliable handling. Spacious interior and cargo space. Fuel-efficient and safe. Well-maintained condition. Ideal for daily use."},
+  {name:"Kia Soul", price:"$1,500", type:"Compact", img:"https://images.unsplash.com/photo-1611840223040-5aa6f18f0d5f", lat:39.9526, lon:-75.1652,
+  desc:"Fun and quirky compact car. Efficient and fuel-friendly. Comfortable seating. Smooth handling and easy parking. Reliable and well-maintained. Perfect city vehicle."},
+  {name:"Hyundai Tucson", price:"$3,000", type:"SUV", img:"https://images.unsplash.com/photo-1608889175512-6bcbde8fa7d4", lat:42.3601, lon:-71.0589,
+  desc:"Stylish SUV with modern design. Comfortable and spacious interior. Smooth driving experience. Reliable engine and safety features. Well-maintained and fuel-efficient. Great for families."},
+  {name:"Mazda3", price:"$2,400", type:"Sedan", img:"https://images.unsplash.com/photo-1502877338535-766e1452684a", lat:36.1699, lon:-115.1398,
+  desc:"Compact sedan with sporty handling. Comfortable cabin and modern interior. Fuel-efficient and reliable engine. Smooth ride. Well-maintained condition. Excellent daily driver."},
+  {name:"Toyota RAV4", price:"$3,100", type:"SUV", img:"https://images.unsplash.com/photo-1571607380965-5f5b8ec7750f", lat:39.7684, lon:-86.1581,
+  desc:"Popular SUV for family and adventure. Smooth handling and stable ride. Comfortable interior and ample cargo space. Reliable engine and safety features. Professionally maintained."},
+  {name:"Chevrolet Camaro", price:"$3,700", type:"Sport", img:"https://images.unsplash.com/photo-1503376780353-7e6692767b70", lat:37.7749, lon:-122.4194,
+  desc:"High-performance sports car with aggressive design. Smooth acceleration and handling. Luxurious interior. Excellent braking system. Eye-catching look. Professionally maintained."},
+  {name:"Honda Odyssey", price:"$3,300", type:"Family", img:"https://images.unsplash.com/photo-1493238792000-8113da705763", lat:38.9072, lon:-77.0369,
+  desc:"Reliable family minivan. Spacious interior and comfortable seating. Smooth and safe handling. Fuel-efficient for size. Well-maintained and practical. Ideal for family trips."}
 ];
+
+/* SHUFFLE AND PICK 10 RANDOM CARS */
+function getRandomCars(arr,num){
+  let shuffled = arr.sort(()=>0.5 - Math.random());
+  return shuffled.slice(0,num);
+}
 
 /* RENDER CARS */
 function renderCars(){
@@ -328,17 +332,18 @@ function renderCars(){
   container.innerHTML="";
   const search = document.getElementById('searchInput').value.toLowerCase();
   const type = document.getElementById('typeFilter').value;
-  cars.forEach((car,i)=>{
-    if((car.name.toLowerCase().includes(search)) && (type=="" || type==car.type)){
+  const selectedCars = getRandomCars(cars,10);
+  selectedCars.forEach((car,i)=>{
+    if(car.name.toLowerCase().includes(search) && (type=="" || type==car.type)){
       const div=document.createElement('div');
       div.className="car";
-      div.dataset.index=i;
+      div.dataset.index=cars.indexOf(car);
       div.innerHTML=`<img src="${car.img}">
         <div class="car-content">
         <h3>${car.name}</h3>
         <div class="price">${car.price}</div>
         </div>`;
-      div.onclick=()=>openModal(i);
+      div.onclick=()=>openModal(cars.indexOf(car));
       container.appendChild(div);
     }
   });
@@ -356,7 +361,13 @@ function openModal(index){
   modalImage.src=cars[index].img;
   modalDesc.innerText=cars[index].desc;
   modal.style.display="block";
+
+  map.setView([cars[index].lat, cars[index].lon], 10);
+  if(window.currentMarker) map.removeLayer(window.currentMarker);
+  window.currentMarker = L.marker([cars[index].lat, cars[index].lon]).addTo(map)
+    .bindPopup(`${cars[index].name} - ${cars[index].price}`).openPopup();
 }
+
 document.getElementById('modalClose').onclick=function(){modal.style.display="none";}
 window.onclick=function(e){if(e.target==modal){modal.style.display="none";}}
 
