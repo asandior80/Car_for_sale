@@ -5,36 +5,271 @@
 <title>Cars For Sale</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
 <style>
-body{margin:0;font-family:Arial;background:#f4f6f8}
-header{background:#111;color:#fff;padding:25px;text-align:center}
-nav{background:#000;padding:10px;text-align:center}
-nav a{color:#fff;margin:0 15px;text-decoration:none;font-weight:bold}
-section{padding:30px}
-h2{text-align:center}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f2f4f7;color:#222}
+header{background:#0b0b0b;color:#fff;padding:35px;text-align:center}
+header h1{margin:0;font-size:36px}
+header p{opacity:.9}
+
+nav{background:#000;padding:12px;text-align:center;position:sticky;top:0;z-index:10}
+nav a{color:#fff;margin:0 18px;text-decoration:none;font-weight:bold}
+nav a:hover{color:#0ab}
+
+section{padding:40px}
+h2{text-align:center;margin-bottom:25px}
 
 .filters{
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  flex-wrap:wrap;
-  margin-bottom:20px;
+  display:flex;gap:12px;justify-content:center;
+  flex-wrap:wrap;margin-bottom:30px
 }
-input,select,button{
-  padding:10px;
-  border-radius:6px;
-  border:1px solid #ccc;
+input,select,button,textarea{
+  padding:12px;border-radius:6px;border:1px solid #ccc;
+  font-size:14px
 }
-button{cursor:pointer;background:#111;color:#fff}
-button:hover{background:#0a8}
+button{cursor:pointer;background:#0b0b0b;color:#fff}
+button:hover{background:#0ab}
 
 .cars{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:20px;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:25px;
 }
 .car{
-  background:#fff;
+  background:#fff;border-radius:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.1);
+  overflow:hidden;cursor:pointer
+}
+.car img{width:100%;height:210px;object-fit:cover}
+.car-content{padding:18px}
+.car-content h3{margin:0 0 8px}
+.price{color:#0ab;font-size:22px;font-weight:bold;margin-bottom:10px}
+.desc{font-size:14px;line-height:1.6;color:#444}
+
+.review-box{
+  max-width:900px;margin:auto;
+  display:grid;gap:18px
+}
+.review{
+  background:#fff;padding:18px;border-radius:10px;
+  box-shadow:0 4px 12px rgba(0,0,0,.1)
+}
+
+form{
+  max-width:520px;margin:auto;
+  background:#fff;padding:25px;
+  border-radius:12px;
+  box-shadow:0 6px 18px rgba(0,0,0,.1)
+}
+form textarea{height:120px}
+
+footer{background:#0b0b0b;color:#fff;text-align:center;padding:18px}
+
+#map{height:380px;border-radius:12px;margin-top:20px}
+
+/* Modal */
+.modal{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.65);
+  align-items:center;justify-content:center;z-index:20
+}
+.modal-content{
+  background:#fff;padding:25px;
+  border-radius:12px;max-width:520px
+}
+
+/* Floating */
+.floating{
+  position:fixed;right:20px;bottom:20px;
+  display:flex;flex-direction:column;gap:12px
+}
+.floating a,.floating button{
+  width:55px;height:55px;border-radius:50%;
+  background:#0b0b0b;color:#fff;
+  font-size:22px;border:none;
+  display:flex;align-items:center;justify-content:center
+}
+.floating a:hover,.floating button:hover{background:#0ab}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Cars For Sale</h1>
+  <p>Professionally Selected • Affordable • Reliable Vehicles</p>
+</header>
+
+<nav>
+  <a href="#home">Home</a>
+  <a href="#cars">Cars</a>
+  <a href="#reviews">Reviews</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<section id="home">
+  <h2>Welcome</h2>
+  <p style="max-width:850px;margin:auto;text-align:center;line-height:1.7">
+    We provide carefully selected vehicles suited for daily commuting,
+    family use, and long-distance driving. Each car is reviewed for
+    reliability, comfort, and value. Our goal is to make car selection
+    simple, transparent, and stress-free.
+  </p>
+  <div id="map"></div>
+</section>
+
+<section id="cars">
+<h2>Available Cars</h2>
+
+<div class="filters">
+  <input id="search" placeholder="Search car">
+  <select id="type">
+    <option value="">All Categories</option>
+    <option>Sedan</option>
+    <option>SUV</option>
+    <option>Compact</option>
+    <option>Luxury</option>
+    <option>Sport</option>
+  </select>
+  <input type="number" id="min" placeholder="Min Price ($)">
+  <input type="number" id="max" placeholder="Max Price ($)">
+  <button onclick="filterCars()">Apply</button>
+</div>
+
+<div class="cars" id="carList"></div>
+</section>
+
+<section id="reviews">
+<h2>Customer Reviews</h2>
+<div class="review-box">
+  <div class="review">⭐⭐⭐⭐⭐ – Clear descriptions, fair prices, and smooth communication.</div>
+  <div class="review">⭐⭐⭐⭐⭐ – The car matched exactly what was described on the site.</div>
+  <div class="review">⭐⭐⭐⭐ – Professional service and helpful responses.</div>
+</div>
+</section>
+
+<section id="contact">
+<h2>Contact Us</h2>
+<form onsubmit="sendMsg(event)">
+  <input required placeholder="Your Name">
+  <input required type="email" placeholder="Your Email">
+  <textarea placeholder="Message"></textarea>
+  <button>Send Message</button>
+</form>
+</section>
+
+<footer>
+  <p>Contact Email: <b>willowmadina@gmail.com</b></p>
+</footer>
+
+<div class="floating">
+  <a href="mailto:willowmadina@gmail.com">✉️</a>
+  <button onclick="scrollToTop()">👍</button>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h3 id="mName"></h3>
+    <p id="mPrice"></p>
+    <p id="mDesc"></p>
+    <button onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+const cars=[
+{
+name:"Reliable City Sedan",
+type:"Sedan",
+price:1200,
+img:"https://images.unsplash.com/photo-1511910849309-0dffb8785146",
+desc:`This sedan is ideal for daily commuting and long drives.
+It offers a smooth ride, balanced handling, and excellent fuel efficiency.
+The interior is spacious with comfortable seating for passengers.
+Maintenance costs are low, making it budget-friendly.
+It performs reliably in city traffic and on highways.
+A solid choice for drivers seeking practicality and comfort.`
+},
+{
+name:"Compact Urban Car",
+type:"Compact",
+price:700,
+img:"https://images.unsplash.com/photo-1549924231-f129b911e442",
+desc:`Designed for urban environments, this compact car is easy to park and maneuver.
+It delivers impressive fuel economy and responsive steering.
+The cabin layout is simple yet functional.
+Perfect for students, professionals, or first-time car owners.
+Reliable performance with minimal running costs.
+An excellent everyday vehicle for city life.`
+},
+{
+name:"Luxury Executive Sedan",
+type:"Luxury",
+price:4000,
+img:"https://images.unsplash.com/photo-1542362567-b07e54358753",
+desc:`This luxury sedan combines elegance with refined performance.
+Premium materials enhance interior comfort and style.
+The suspension system ensures a quiet and smooth drive.
+Advanced features improve safety and driving confidence.
+Ideal for executives and long-distance travel.
+A vehicle that delivers class, comfort, and reliability.`
+}
+];
+
+function showCars(list){
+  carList.innerHTML="";
+  list.forEach(c=>{
+    carList.innerHTML+=`
+      <div class="car" onclick="openModal('${c.name}','${c.price}','${c.desc.replace(/'/g,"")}')">
+        <img src="${c.img}">
+        <div class="car-content">
+          <h3>${c.name}</h3>
+          <div class="price">$${c.price}</div>
+          <p class="desc">${c.desc}</p>
+        </div>
+      </div>`;
+  });
+}
+
+function filterCars(){
+  const s=search.value.toLowerCase();
+  const t=type.value;
+  const minP=min.value||0;
+  const maxP=max.value||99999;
+  showCars(cars.filter(c=>
+    c.name.toLowerCase().includes(s) &&
+    (t==""||c.type==t) &&
+    c.price>=minP && c.price<=maxP
+  ));
+}
+
+function openModal(n,p,d){
+  modal.style.display="flex";
+  mName.innerText=n;
+  mPrice.innerText="Price: $"+p;
+  mDesc.innerText=d;
+}
+function closeModal(){modal.style.display="none"}
+
+function sendMsg(e){
+  e.preventDefault();
+  alert("Message sent. We will respond by email.");
+}
+
+function scrollToTop(){
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+const map=L.map("map").setView([39,-95],4);
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+
+window.onload=()=>showCars(cars.sort(()=>0.5-Math.random()));
+</script>
+
+</body>
+</html>  background:#fff;
   border-radius:12px;
   box-shadow:0 5px 15px rgba(0,0,0,.1);
   overflow:hidden;
